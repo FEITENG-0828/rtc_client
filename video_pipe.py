@@ -78,12 +78,13 @@ class VideoPipe:
         """关闭管道连接"""
         if self.__pipe_handle:
             try:
-                win32file.FlushFileBuffers(self.__pipe_handle)
-                win32pipe.DisconnectNamedPipe(self.__pipe_handle)
+                if self.connected:
+                    win32file.FlushFileBuffers(self.__pipe_handle)
+                    win32pipe.DisconnectNamedPipe(self.__pipe_handle)
                 win32file.CloseHandle(self.__pipe_handle)
             except pywintypes.error:
                 pass
-            self.connected = False
+        self.connected = False
 
     def __enter__(self):
         return self
